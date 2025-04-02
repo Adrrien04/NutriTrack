@@ -5,6 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const sumProteinesElement = document.getElementById('sumProteines');
     const sumGlucidesElement = document.getElementById('sumGlucides');
     const sumLipidesElement = document.getElementById('sumLipides');
+    const objectiveForm = document.getElementById('objectiveForm');
+    const compareCaloriesElement = document.getElementById('compareCalories');
+    const compareProteinesElement = document.getElementById('compareProteines');
+    const compareGlucidesElement = document.getElementById('compareGlucides');
+    const compareLipidesElement = document.getElementById('compareLipides');
+    const objectiveCaloriesDisplay = document.getElementById('objectiveCaloriesDisplay');
+    const objectiveProteinesDisplay = document.getElementById('objectiveProteinesDisplay');
+    const objectiveGlucidesDisplay = document.getElementById('objectiveGlucidesDisplay');
+    const objectiveLipidesDisplay = document.getElementById('objectiveLipidesDisplay');
 
     mealForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -26,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
             proteines: parseInt(proteinesInput.value) || 0,
             glucides: parseInt(glucidesInput.value) || 0,
             lipides: parseInt(lipidesInput.value) || 0,
+            user: 'user1' // Hardcode the user to 'user1'
         };
 
         try {
@@ -51,22 +61,60 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    objectiveForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const calories = document.getElementById('objectiveCalories').value;
+        const proteines = document.getElementById('objectiveProteines').value;
+        const glucides = document.getElementById('objectiveGlucides').value;
+        const lipides = document.getElementById('objectiveLipides').value;
+
+        const objective = {
+            calories: parseInt(calories) || 0,
+            proteines: parseInt(proteines) || 0,
+            glucides: parseInt(glucides) || 0,
+            lipides: parseInt(lipides) || 0
+        };
+
+        try {
+            const response = await fetch('http://localhost:3000/objectives/user1', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(objective),
+            });
+
+            if (response.ok) {
+                alert('Objectives set successfully!');
+                objectiveForm.reset();
+            } else {
+                const errorData = await response.json();
+                console.error('Error response:', errorData);
+                alert('Failed to set objectives: ' + (errorData.message || "Unknown error"));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error setting objectives: ' + error.message);
+        }
+    });
+
     async function fetchMeals() {
         try {
-            const response = await fetch('http://localhost:3000/meals');
+            const response = await fetch('http://localhost:3000/meals/user1');
             if (!response.ok) throw new Error("Failed to fetch meals");
 
             const meals = await response.json();
+            console.log('Fetched meals:', meals); // Log the fetched meals
             mealsTableBody.innerHTML = '';
             meals.forEach(meal => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${meal.nom}</td>
-                    <td>${meal.calories}</td>
-                    <td>${meal.proteines}</td>
-                    <td>${meal.glucides}</td>
-                    <td>${meal.lipides}</td>
-                `;
+                <td>${meal.nom}</td>
+                <td>${meal.calories}</td>
+                <td>${meal.proteines}</td>
+                <td>${meal.glucides}</td>
+                <td>${meal.lipides}</td>
+                <td>${new Date(meal.createdAt).toLocaleDateString('fr-FR')}</td>
+            `;
                 mealsTableBody.appendChild(row);
             });
         } catch (error) {
@@ -75,9 +123,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function fetchObjectives() {
+        try {
+            const response = await fetch('http://localhost:3000/objectives/user1');
+            if (!response.ok) throw new Error("Failed to fetch objectives");
+
+            const objective = await response.json();
+            return objective;
+        } catch (error) {
+            console.error('Error fetching objectives:', error);
+            alert('Error loading objectives.');
+            return null;
+        }
+    }
+
     async function fetchSumNutrients() {
         try {
-            const response = await fetch('http://localhost:3000/meals/sumNutrients');
+            const response = await fetch('http://localhost:3000/meals/user1/sumNutrients');
             if (!response.ok) throw new Error("Failed to fetch nutrient summary");
 
             const { sumCalories, sumProteines, sumGlucides, sumLipides } = await response.json();
@@ -85,11 +147,44 @@ document.addEventListener('DOMContentLoaded', () => {
             sumProteinesElement.textContent = sumProteines || 0;
             sumGlucidesElement.textContent = sumGlucides || 0;
             sumLipidesElement.textContent = sumLipides || 0;
+
+            const objective = await fetchObjectives();
+            if (objective) {
+                updateProgressBars(sumCalories, sumProteines, sumGlucides, sumLipides, objective);
+                updateComparison(sumCalories, sumProteines, sumGlucides, sumLipides, objective);
+            }
         } catch (error) {
             console.error('Error fetching sum of nutrients:', error);
             alert('Error loading nutritional summary.');
         }
     }
+
+    function updateProgressBars(sumCalories, sumProteines, sumGlucides, sumLipides, objective) {
+        const updateProgressBar = (element, sum, objective) => {
+            const percentage = Math.min((sum / objective) * 100, 100);
+            element.style.width = `${percentage}%`;
+            element.setAttribute('aria-valuenow', percentage);
+            element.textContent = `${Math.round(percentage)}%`;
+        };
+
+        updateProgressBar(progressCalories, sumCalories, objective.calories);
+        updateProgressBar(progressProteines, sumProteines, objective.proteines);
+        updateProgressBar(progressGlucides, sumGlucides, objective.glucides);
+        updateProgressBar(progressLipides, sumLipides, objective.lipides);
+    }
+
+    function updateComparison(sumCalories, sumProteines, sumGlucides, sumLipides, objective) {
+        compareCaloriesElement.textContent = sumCalories;
+        compareProteinesElement.textContent = sumProteines;
+        compareGlucidesElement.textContent = sumGlucides;
+        compareLipidesElement.textContent = sumLipides;
+
+        objectiveCaloriesDisplay.textContent = objective.calories;
+        objectiveProteinesDisplay.textContent = objective.proteines;
+        objectiveGlucidesDisplay.textContent = objective.glucides;
+        objectiveLipidesDisplay.textContent = objective.lipides;
+    }
+
 
     const dashboardLink = document.getElementById('dashboardLink');
     const repasLink = document.getElementById('repasLink');

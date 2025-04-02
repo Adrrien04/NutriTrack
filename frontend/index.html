@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,40 +13,52 @@
             text-align: center;
         }
     </style>
-
-        </head>
+</head>
 <body>
 <div class="container-fluid">
     <div class="row">
-        <!-- Sidebar -->
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
             <div class="sidebar-sticky p-3">
                 <h4 class="text-center">NutriTrack</h4>
                 <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" id="dashboardLink">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="repasLink">Repas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" id="objectifLink">Objectif</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="#" id="dashboardLink">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="repasLink">Repas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" id="objectifLink">Objectif</a></li>
                 </ul>
             </div>
         </nav>
-
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
             <div id="dashboardSection" class="section">
                 <h1 class="text-center mt-3">Dashboard</h1>
                 <div class="card mt-4">
-                    <div class="card-header">Données nutritionnelles journalières</div>
+                    <div class="card-header">Données nutritionnelles</div>
                     <div class="card-body">
                         <p>Total Calories: <span id="sumCalories">0</span> kCal</p>
-                        <p>Total Proteines: <span id="sumProteines">0</span> g</p>
+                        <p>Total Protéines: <span id="sumProteines">0</span> g</p>
                         <p>Total Glucides: <span id="sumGlucides">0</span> g</p>
                         <p>Total Lipides: <span id="sumLipides">0</span> g</p>
+                    </div>
+                    <div class="card mt-4">
+                        <div class="card-header">Comparaison avec les objectifs</div>
+                        <div class="card-body">
+                            <p>Calories: <span id="compareCalories">0</span> / <span id="objectiveCaloriesDisplay">0</span> kCal</p>
+                            <div class="progress">
+                                <div id="progressCalories" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <p>Protéines: <span id="compareProteines">0</span> / <span id="objectiveProteinesDisplay">0</span> g</p>
+                            <div class="progress">
+                                <div id="progressProteines" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <p>Glucides: <span id="compareGlucides">0</span> / <span id="objectiveGlucidesDisplay">0</span> g</p>
+                            <div class="progress">
+                                <div id="progressGlucides" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                            <p>Lipides: <span id="compareLipides">0</span> / <span id="objectiveLipidesDisplay">0</span> g</p>
+                            <div class="progress">
+                                <div id="progressLipides" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -55,76 +67,62 @@
                 <h1 class="text-center mt-3">Repas</h1>
                 <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#mealModal">Ajouter un repas</button>
                 <div class="card mt-4">
-                    <div class="card-header">Meals</div>
+                    <div class="card-header">Liste des repas</div>
                     <div class="card-body">
                         <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Nom</th>
                                 <th>Calories</th>
-                                <th>Proteines (g)</th>
+                                <th>Protéines (g)</th>
                                 <th>Glucides (g)</th>
                                 <th>Lipides (g)</th>
+                                <th>Date</th>
                             </tr>
                             </thead>
-                            <tbody id="mealsTableBody">
-                            <!-- Tableau automatique -->
-                            </tbody>
+                            <tbody id="mealsTableBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
             <div id="objectifSection" class="section" style="display: none;">
-                <h1 class="text-center">Objectif</h1>
-                <!-- Add content for Objectif section here -->
+                <h1 class="text-center mt-3">Objectif</h1>
+                <form id="objectiveForm">
+                    <div class="form-group"><label>Calories</label><input type="number" class="form-control" id="objectiveCalories"></div>
+                    <div class="form-group"><label>Protéines (g)</label><input type="number" class="form-control" id="objectiveProteines"></div>
+                    <div class="form-group"><label>Glucides (g)</label><input type="number" class="form-control" id="objectiveGlucides"></div>
+                    <div class="form-group"><label>Lipides (g)</label><input type="number" class="form-control" id="objectiveLipides"></div>
+                    <button type="submit" class="btn btn-primary">Définir</button>
+                </form>
             </div>
         </main>
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="mealModal" tabindex="-1" role="dialog" aria-labelledby="mealModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="mealModal">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="mealModalLabel">Ajouter un repas</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Ajouter un repas</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
                 <form id="mealForm">
-                    <div class="form-group">
-                        <label for="nom">Nom</label>
-                        <input type="text" class="form-control" id="nom" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="calories">Calories</label>
-                        <input type="number" class="form-control" id="calories" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="proteines">Proteines (g)</label>
-                        <input type="number" class="form-control" id="proteines" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="glucides">Glucides (g)</label>
-                        <input type="number" class="form-control" id="glucides" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="lipides">Lipides (g)</label>
-                        <input type="number" class="form-control" id="lipides" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Ajouter le repas</button>
+                    <div class="form-group"><label>Nom</label><input type="text" class="form-control" id="nom"></div>
+                    <div class="form-group"><label>Calories</label><input type="number" class="form-control" id="calories"></div>
+                    <div class="form-group"><label>Protéines</label><input type="number" class="form-control" id="proteines"></div>
+                    <div class="form-group"><label>Glucides</label><input type="number" class="form-control" id="glucides"></div>
+                    <div class="form-group"><label>Lipides</label><input type="number" class="form-control" id="lipides"></div>
+                    <button type="submit" class="btn btn-primary">Ajouter</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

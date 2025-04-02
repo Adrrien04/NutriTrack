@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
-const mealSchema = new mongoose.Schema({
-    nom: {
+const objectiveSchema = new mongoose.Schema({
+    user: {
         type: String,
-        required: true
+        required: true,
+        default: 'user1'
     },
     calories: {
         type: Number,
@@ -20,12 +21,7 @@ const mealSchema = new mongoose.Schema({
     lipides: {
         type: Number,
         required: true
-    },
-    user: {
-        type: String,
-        required: true,
-        default: 'user1'
     }
 });
 
-module.exports = mongoose.model('Meal', mealSchema);
+module.exports = mongoose.model('Objective', objectiveSchema);

@@ -7,12 +7,19 @@ const Meal = require('../models/Meal');
 router.get('/', getMeals);
 router.post('/', addMeal);
 
-
-const byProtein = R.comparator((a, b) => a.proteines > b.proteines);
-
-router.get('/sortedByProtein', async (req, res) => {
+router.get('/user1', async (req, res) => {
     try {
-        const meals = await Meal.find();
+        const meals = await Meal.find({ user: 'user1' });
+        res.json(meals);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+router.get('/user1/sortedByProtein', async (req, res) => {
+    try {
+        const meals = await Meal.find({ user: 'user1' });
+        const byProtein = R.comparator((a, b) => a.proteines > b.proteines);
         const sortedMeals = R.sort(byProtein, meals);
         res.json(sortedMeals);
     } catch (error) {
@@ -20,13 +27,13 @@ router.get('/sortedByProtein', async (req, res) => {
     }
 });
 
-router.get('/sumNutrients', async (req, res) => {
+router.get('/user1/sumNutrients', async (req, res) => {
     try {
-        const meals = await Meal.find();
+        const meals = await Meal.find({ user: 'user1' });
         const sumCalories = R.reduce((acc, meal) => acc + meal.calories, 0, meals);
         const sumProteines = R.reduce((acc, meal) => acc + meal.proteines, 0, meals);
-        const sumLipides = R.reduce((acc, meal) => acc + meal.glucides, 0, meals);
-        const sumGlucides = R.reduce((acc, meal) => acc + meal.lipides, 0, meals);
+        const sumLipides = R.reduce((acc, meal) => acc + meal.lipides, 0, meals);
+        const sumGlucides = R.reduce((acc, meal) => acc + meal.glucides, 0, meals);
 
         res.json({
             sumCalories,
@@ -40,4 +47,3 @@ router.get('/sumNutrients', async (req, res) => {
 });
 
 module.exports = router;
-

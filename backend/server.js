@@ -17,7 +17,9 @@ app.get('/', (req, res) => {
 });
 
 const mealsRouter = require('./routes/meals');
+const objectivesRouter = require('./routes/objectives');
 app.use('/meals', mealsRouter);
+app.use('/objectives', objectivesRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
