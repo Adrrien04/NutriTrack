@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const MealSchema = new mongoose.Schema({
-    name: {
+    nom: {
         type: String,
         required: true,
     },
@@ -9,18 +9,19 @@ const MealSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    protein: {
+    proteines: {
         type: Number,
         required: true,
     },
-    carbs: {
+    glucides: {
         type: Number,
         required: true,
     },
-    fat: {
+    lipides: {
         type: Number,
         required: true,
     },
+
 });
 
 module.exports = mongoose.model('Meal', MealSchema);

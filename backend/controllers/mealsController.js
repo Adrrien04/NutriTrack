@@ -10,13 +10,13 @@ const getMeals = async (req, res) => {
 };
 
 const addMeal = async (req, res) => {
-    const { name, calories, protein, carbs, fat } = req.body;
+    const { nom, calories, proteines, glucides, lipides } = req.body;
     const meal = new Meal({
-        name,
+        nom,
         calories,
-        protein,
-        carbs,
-        fat,
+        proteines,
+        glucides,
+        lipides,
     });
 
     try {

@@ -1,42 +1,129 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NutriTrack</title>
+    <title>NutriTrack Dashboard</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-</head>
+    <style>
+        .sidebar {
+            height: 100vh;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+
+        </head>
 <body>
-<div class="container">
-    <h1 class="mt-5">NutriTrack</h1>
-    <div id="app">
-        <form id="mealForm">
-            <div class="form-group">
-                <label for="name">Nom du repas</label>
-                <input type="text" class="form-control" id="name" required>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+            <div class="sidebar-sticky p-3">
+                <h4 class="text-center">NutriTrack</h4>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="dashboardLink">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="repasLink">Repas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="objectifLink">Objectif</a>
+                    </li>
+                </ul>
             </div>
-            <div class="form-group">
-                <label for="calories">Calories</label>
-                <input type="number" class="form-control" id="calories" required>
+        </nav>
+
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div id="dashboardSection" class="section">
+                <h1 class="text-center mt-3">Dashboard</h1>
+                <div class="card mt-4">
+                    <div class="card-header">Données nutritionnelles journalières</div>
+                    <div class="card-body">
+                        <p>Total Calories: <span id="sumCalories">0</span> kCal</p>
+                        <p>Total Proteines: <span id="sumProteines">0</span> g</p>
+                        <p>Total Glucides: <span id="sumGlucides">0</span> g</p>
+                        <p>Total Lipides: <span id="sumLipides">0</span> g</p>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="protein">Protéines (g)</label>
-                <input type="number" class="form-control" id="protein" required>
+
+            <div id="repasSection" class="section" style="display: none;">
+                <h1 class="text-center mt-3">Repas</h1>
+                <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#mealModal">Ajouter un repas</button>
+                <div class="card mt-4">
+                    <div class="card-header">Meals</div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Calories</th>
+                                <th>Proteines (g)</th>
+                                <th>Glucides (g)</th>
+                                <th>Lipides (g)</th>
+                            </tr>
+                            </thead>
+                            <tbody id="mealsTableBody">
+                            <!-- Tableau automatique -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="carbs">Glucides (g)</label>
-                <input type="number" class="form-control" id="carbs" required>
+
+            <div id="objectifSection" class="section" style="display: none;">
+                <h1 class="text-center">Objectif</h1>
+                <!-- Add content for Objectif section here -->
             </div>
-            <div class="form-group">
-                <label for="fat">Lipides (g)</label>
-                <input type="number" class="form-control" id="fat" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Ajouter le repas</button>
-        </form>
+        </main>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="mealModal" tabindex="-1" role="dialog" aria-labelledby="mealModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mealModalLabel">Ajouter un repas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="mealForm">
+                    <div class="form-group">
+                        <label for="nom">Nom</label>
+                        <input type="text" class="form-control" id="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calories">Calories</label>
+                        <input type="number" class="form-control" id="calories" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="proteines">Proteines (g)</label>
+                        <input type="number" class="form-control" id="proteines" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="glucides">Glucides (g)</label>
+                        <input type="number" class="form-control" id="glucides" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lipides">Lipides (g)</label>
+                        <input type="number" class="form-control" id="lipides" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ajouter le repas</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="app.js"></script>
 </body>
