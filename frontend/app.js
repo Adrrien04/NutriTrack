@@ -35,6 +35,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentGlucides = document.getElementById('currentGlucides');
     const currentLipides = document.getElementById('currentLipides');
 
+    // Sélection des boutons de tri
+    const sortByProteinBtn = document.getElementById('sortByProtein');
+    const sortByGlucideBtn = document.getElementById('sortByGlucide');
+    const sortByLipideBtn = document.getElementById('sortByLipide');
+    const sortByCalorieBtn = document.getElementById('sortByCalorie');
+
+    // Ajout des événements de clic
+    sortByProteinBtn.addEventListener('click', () => fetchSortedMeals('protein'));
+    sortByGlucideBtn.addEventListener('click', () => fetchSortedMeals('glucide'));
+    sortByLipideBtn.addEventListener('click', () => fetchSortedMeals('lipide'));
+    sortByCalorieBtn.addEventListener('click', () => fetchSortedMeals('calorie'));
+
     // ajout d'un événement au formulaire de repas
     mealForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -235,6 +247,51 @@ document.addEventListener('DOMContentLoaded', () => {
         objectiveGlucidesDisplay.textContent = objective.glucides;
         objectiveLipidesDisplay.textContent = objective.lipides;
     }
+
+    // fonction pour récupérer les repas triés
+    async function fetchSortedMeals(criteria) {
+        let url;
+        switch (criteria) {
+            case 'protein':
+                url = 'http://localhost:3000/meals/user1/sortedByProtein';
+                break;
+            case 'glucide':
+                url = 'http://localhost:3000/meals/user1/sortedByGlucide';
+                break;
+            case 'lipide':
+                url = 'http://localhost:3000/meals/user1/sortedByLipide';
+                break;
+            case 'calorie':
+                url = 'http://localhost:3000/meals/user1/sortedByCalorie';
+                break;
+            default:
+                return;
+        }
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Failed to fetch sorted meals");
+
+            const meals = await response.json();
+            mealsTableBody.innerHTML = '';  // Vide d'abord la table
+            meals.forEach(meal => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${meal.nom}</td>
+                <td>${meal.calories}</td>
+                <td>${meal.proteines}</td>
+                <td>${meal.glucides}</td>
+                <td>${meal.lipides}</td>
+                <td>${new Date(meal.createdAt).toLocaleDateString('fr-FR')}</td>
+            `;
+                mealsTableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Error fetching sorted meals:', error);
+            alert('Error loading sorted meals.');
+        }
+    }
+
 
     // gestion des sections affichées
     const dashboardLink = document.getElementById('dashboardLink');

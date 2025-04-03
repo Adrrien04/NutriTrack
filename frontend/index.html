@@ -64,11 +64,24 @@
             </div>
 
             <div id="repasSection" class="section" style="display: none;">
-                <h1 class="text-center mt-3">Repas</h1>
-                <button type="button" class="btn btn-primary mt-3" data-toggle="modal" data-target="#mealModal">Ajouter un repas</button>
-                <div class="card mt-4">
-                    <div class="card-header">Liste des repas</div>
+                <h1 class="text-center mt-4 mb-4">Repas</h1>
+                <button type="button" class="btn btn-primary mb-4" data-toggle="modal" data-target="#mealModal">Ajouter un repas</button>
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Liste des repas</h5>
+                    </div>
                     <div class="card-body">
+                        <div class="dropdown mb-4">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="sortDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Trier par
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="sortDropdown">
+                                <a class="dropdown-item" href="#" id="sortByProtein">Protéines</a>
+                                <a class="dropdown-item" href="#" id="sortByGlucide">Glucides</a>
+                                <a class="dropdown-item" href="#" id="sortByLipide">Lipides</a>
+                                <a class="dropdown-item" href="#" id="sortByCalorie">Calories</a>
+                            </div>
+                        </div>
                         <table class="table table-striped">
                             <thead>
                             <tr>
@@ -85,6 +98,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div id="objectifSection" style="display: none;">
                 <h1 class="text-center mt-3">Objectifs</h1>
