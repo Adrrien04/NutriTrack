@@ -86,15 +86,34 @@
                 </div>
             </div>
 
-            <div id="objectifSection" class="section" style="display: none;">
-                <h1 class="text-center mt-3">Objectif</h1>
+            <div id="objectifSection" style="display: none;">
+                <h1 class="text-center mt-3">Objectifs</h1>
                 <form id="objectiveForm">
-                    <div class="form-group"><label>Calories</label><input type="number" class="form-control" id="objectiveCalories"></div>
-                    <div class="form-group"><label>Protéines (g)</label><input type="number" class="form-control" id="objectiveProteines"></div>
-                    <div class="form-group"><label>Glucides (g)</label><input type="number" class="form-control" id="objectiveGlucides"></div>
-                    <div class="form-group"><label>Lipides (g)</label><input type="number" class="form-control" id="objectiveLipides"></div>
+                    <div class="form-group">
+                        <label for="objectiveCalories">Calories</label>
+                        <input type="number" class="form-control" id="objectiveCalories" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objectiveProteines">Protéines</label>
+                        <input type="number" class="form-control" id="objectiveProteines" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objectiveGlucides">Glucides</label>
+                        <input type="number" class="form-control" id="objectiveGlucides" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="objectiveLipides">Lipides</label>
+                        <input type="number" class="form-control" id="objectiveLipides" required>
+                    </div>
                     <button type="submit" class="btn btn-primary">Définir</button>
                 </form>
+                <div id="currentObjectives" style="display: none;" class="mt-5">
+                    <h3>Objectifs Actuels</h3>
+                    <p>Calories: <span id="currentCalories">0</span> kCal</p>
+                    <p>Protéines: <span id="currentProteines">0</span> g</p>
+                    <p>Glucides: <span id="currentGlucides">0</span> g</p>
+                    <p>Lipides: <span id="currentLipides">0</span> g</p>
+                </div>
             </div>
         </main>
     </div>

@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const mealForm = document.getElementById('mealForm');
+    const objectiveForm = document.getElementById('objectiveForm');
     const mealsTableBody = document.getElementById('mealsTableBody');
     const sumCaloriesElement = document.getElementById('sumCalories');
     const sumProteinesElement = document.getElementById('sumProteines');
     const sumGlucidesElement = document.getElementById('sumGlucides');
     const sumLipidesElement = document.getElementById('sumLipides');
-    const objectiveForm = document.getElementById('objectiveForm');
     const compareCaloriesElement = document.getElementById('compareCalories');
     const compareProteinesElement = document.getElementById('compareProteines');
     const compareGlucidesElement = document.getElementById('compareGlucides');
@@ -14,6 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const objectiveProteinesDisplay = document.getElementById('objectiveProteinesDisplay');
     const objectiveGlucidesDisplay = document.getElementById('objectiveGlucidesDisplay');
     const objectiveLipidesDisplay = document.getElementById('objectiveLipidesDisplay');
+    const progressCalories = document.getElementById('progressCalories');
+    const progressProteines = document.getElementById('progressProteines');
+    const progressGlucides = document.getElementById('progressGlucides');
+    const progressLipides = document.getElementById('progressLipides');
+    const currentObjectives = document.getElementById('currentObjectives');
+    const currentCalories = document.getElementById('currentCalories');
+    const currentProteines = document.getElementById('currentProteines');
+    const currentGlucides = document.getElementById('currentGlucides');
+    const currentLipides = document.getElementById('currentLipides');
 
     mealForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -87,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 alert('Objectives set successfully!');
                 objectiveForm.reset();
+                fetchObjectives();
             } else {
                 const errorData = await response.json();
                 console.error('Error response:', errorData);
@@ -129,6 +139,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error("Failed to fetch objectives");
 
             const objective = await response.json();
+            if (objective) {
+                currentCalories.textContent = objective.calories;
+                currentProteines.textContent = objective.proteines;
+                currentGlucides.textContent = objective.glucides;
+                currentLipides.textContent = objective.lipides;
+                currentObjectives.style.display = 'block';
+            } else {
+                currentObjectives.style.display = 'none';
+            }
             return objective;
         } catch (error) {
             console.error('Error fetching objectives:', error);
@@ -165,6 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.width = `${percentage}%`;
             element.setAttribute('aria-valuenow', percentage);
             element.textContent = `${Math.round(percentage)}%`;
+
+            if (sum > objective) {
+                element.classList.add('bg-danger');
+                element.textContent += ` (+${sum - objective})`;
+            } else {
+                element.classList.remove('bg-danger');
+            }
         };
 
         updateProgressBar(progressCalories, sumCalories, objective.calories);
@@ -172,7 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressBar(progressGlucides, sumGlucides, objective.glucides);
         updateProgressBar(progressLipides, sumLipides, objective.lipides);
     }
-
     function updateComparison(sumCalories, sumProteines, sumGlucides, sumLipides, objective) {
         compareCaloriesElement.textContent = sumCalories;
         compareProteinesElement.textContent = sumProteines;
@@ -184,7 +209,6 @@ document.addEventListener('DOMContentLoaded', () => {
         objectiveGlucidesDisplay.textContent = objective.glucides;
         objectiveLipidesDisplay.textContent = objective.lipides;
     }
-
 
     const dashboardLink = document.getElementById('dashboardLink');
     const repasLink = document.getElementById('repasLink');
@@ -217,4 +241,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetchMeals();
     fetchSumNutrients();
+    fetchObjectives();
 });
