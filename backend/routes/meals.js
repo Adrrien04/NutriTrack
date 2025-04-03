@@ -27,6 +27,39 @@ router.get('/user1/sortedByProtein', async (req, res) => {
     }
 });
 
+router.get('/user1/sortedByGlucide', async (req, res) => {
+    try {
+        const meals = await Meal.find({ user: 'user1' });
+        const byGlucide = R.comparator((a, b) => a.glucides > b.glucides);
+        const sortedMeals = R.sort(byGlucide, meals);
+        res.json(sortedMeals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/user1/sortedByLipide', async (req, res) => {
+    try {
+        const meals = await Meal.find({ user: 'user1' });
+        const byLipide = R.comparator((a, b) => a.lipides > b.lipides);
+        const sortedMeals = R.sort(byLipide, meals);
+        res.json(sortedMeals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/user1/sortedByCalorie', async (req, res) => {
+    try {
+        const meals = await Meal.find({ user: 'user1' });
+        const byCalorie = R.comparator((a, b) => a.calories > b.calories);
+        const sortedMeals = R.sort(byCalorie, meals);
+        res.json(sortedMeals);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 router.get('/user1/sumNutrients', async (req, res) => {
     try {
         const today = new Date();
