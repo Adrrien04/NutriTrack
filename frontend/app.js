@@ -1,43 +1,58 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // récupération des éléments du formulaire et du tableau
     const mealForm = document.getElementById('mealForm');
     const objectiveForm = document.getElementById('objectiveForm');
     const mealsTableBody = document.getElementById('mealsTableBody');
+
+    // récupération des éléments pour afficher les sommes des nutriments
     const sumCaloriesElement = document.getElementById('sumCalories');
     const sumProteinesElement = document.getElementById('sumProteines');
     const sumGlucidesElement = document.getElementById('sumGlucides');
     const sumLipidesElement = document.getElementById('sumLipides');
+
+    // éléments pour afficher la comparaison avec les objectifs
     const compareCaloriesElement = document.getElementById('compareCalories');
     const compareProteinesElement = document.getElementById('compareProteines');
     const compareGlucidesElement = document.getElementById('compareGlucides');
     const compareLipidesElement = document.getElementById('compareLipides');
+
+    // éléments pour afficher les objectifs
     const objectiveCaloriesDisplay = document.getElementById('objectiveCaloriesDisplay');
     const objectiveProteinesDisplay = document.getElementById('objectiveProteinesDisplay');
     const objectiveGlucidesDisplay = document.getElementById('objectiveGlucidesDisplay');
     const objectiveLipidesDisplay = document.getElementById('objectiveLipidesDisplay');
+
+    // éléments des barres de progression
     const progressCalories = document.getElementById('progressCalories');
     const progressProteines = document.getElementById('progressProteines');
     const progressGlucides = document.getElementById('progressGlucides');
     const progressLipides = document.getElementById('progressLipides');
+
+    // éléments affichant les objectifs actuels
     const currentObjectives = document.getElementById('currentObjectives');
     const currentCalories = document.getElementById('currentCalories');
     const currentProteines = document.getElementById('currentProteines');
     const currentGlucides = document.getElementById('currentGlucides');
     const currentLipides = document.getElementById('currentLipides');
 
+    // ajout d'un événement au formulaire de repas
     mealForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // récupération des inputs pour un repas
         const nomInput = document.getElementById('nom');
         const caloriesInput = document.getElementById('calories');
         const proteinesInput = document.getElementById('proteines');
         const glucidesInput = document.getElementById('glucides');
         const lipidesInput = document.getElementById('lipides');
 
+        // vérification si tous les champs sont remplis
         if (!nomInput || !caloriesInput || !proteinesInput || !glucidesInput || !lipidesInput) {
             alert("Une erreur est survenue, vérifiez votre formulaire.");
             return;
         }
 
+        // création d'un objet repas
         const meal = {
             nom: nomInput.value,
             calories: parseInt(caloriesInput.value) || 0,
@@ -49,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
+            // envoi de la requête pour ajouter un repas
             const response = await fetch('http://localhost:3000/meals', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -58,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 alert('Meal added successfully!');
                 mealForm.reset();
-                fetchMeals();
-                fetchSumNutrients();
+                fetchMeals();  // met à jour la liste des repas
+                fetchSumNutrients();  // met à jour la somme des nutriments
             } else {
                 const errorData = await response.json();
                 console.error('Error response:', errorData);
@@ -71,14 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // ajout d'un événement au formulaire d'objectifs
     objectiveForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // récupération des objectifs
         const calories = document.getElementById('objectiveCalories').value;
         const proteines = document.getElementById('objectiveProteines').value;
         const glucides = document.getElementById('objectiveGlucides').value;
         const lipides = document.getElementById('objectiveLipides').value;
 
+        // création d'un objet objectif
         const objective = {
             calories: parseInt(calories) || 0,
             proteines: parseInt(proteines) || 0,
@@ -87,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         try {
+            // envoi de la requête pour définir les objectifs
             const response = await fetch('http://localhost:3000/objectives/user1', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -96,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 alert('Objectives set successfully!');
                 objectiveForm.reset();
-                fetchObjectives();
+                fetchObjectives();  // met à jour les objectifs
             } else {
                 const errorData = await response.json();
                 console.error('Error response:', errorData);
@@ -108,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // fonction pour récupérer les repas
     async function fetchMeals() {
         try {
             const response = await fetch('http://localhost:3000/meals/user1');
@@ -133,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // fonction pour récupérer les objectifs
     async function fetchObjectives() {
         try {
             const response = await fetch('http://localhost:3000/objectives/user1');
@@ -156,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // fonction pour récupérer la somme des nutriments
     async function fetchSumNutrients() {
         try {
             const response = await fetch('http://localhost:3000/meals/user1/sumNutrients');
@@ -178,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // fonction pour mettre à jour les barres de progression
     function updateProgressBars(sumCalories, sumProteines, sumGlucides, sumLipides, objective) {
         const updateProgressBar = (element, sum, objective) => {
             const percentage = Math.min((sum / objective) * 100, 100);
@@ -198,6 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressBar(progressGlucides, sumGlucides, objective.glucides);
         updateProgressBar(progressLipides, sumLipides, objective.lipides);
     }
+
+    // fonction pour mettre à jour la comparaison avec les objectifs
     function updateComparison(sumCalories, sumProteines, sumGlucides, sumLipides, objective) {
         compareCaloriesElement.textContent = sumCalories;
         compareProteinesElement.textContent = sumProteines;
@@ -210,6 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         objectiveLipidesDisplay.textContent = objective.lipides;
     }
 
+    // gestion des sections affichées
     const dashboardLink = document.getElementById('dashboardLink');
     const repasLink = document.getElementById('repasLink');
     const objectifLink = document.getElementById('objectifLink');
@@ -235,10 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
         objectifSection.style.display = 'block';
     });
 
+    // affichage de la première section
     dashboardSection.style.display = 'block';
     repasSection.style.display = 'none';
     objectifSection.style.display = 'none';
 
+    // récupération des données
     fetchMeals();
     fetchSumNutrients();
     fetchObjectives();
