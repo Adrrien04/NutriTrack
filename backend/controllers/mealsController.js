@@ -17,6 +17,7 @@ const addMeal = async (req, res) => {
         proteines,
         glucides,
         lipides,
+        createdAt: new Date()
     });
 
     try {

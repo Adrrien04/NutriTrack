@@ -29,7 +29,14 @@ router.get('/user1/sortedByProtein', async (req, res) => {
 
 router.get('/user1/sumNutrients', async (req, res) => {
     try {
-        const meals = await Meal.find({ user: 'user1' });
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const meals = await Meal.find({
+            user: 'user1',
+            createdAt: { $gte: today }
+        });
+
         const sumCalories = R.reduce((acc, meal) => acc + meal.calories, 0, meals);
         const sumProteines = R.reduce((acc, meal) => acc + meal.proteines, 0, meals);
         const sumLipides = R.reduce((acc, meal) => acc + meal.lipides, 0, meals);

@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
             proteines: parseInt(proteinesInput.value) || 0,
             glucides: parseInt(glucidesInput.value) || 0,
             lipides: parseInt(lipidesInput.value) || 0,
-            user: 'user1' // Hardcode the user to 'user1'
+            user: 'user1',
+            createdAt: new Date()
         };
 
         try {
@@ -103,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error("Failed to fetch meals");
 
             const meals = await response.json();
-            console.log('Fetched meals:', meals); // Log the fetched meals
             mealsTableBody.innerHTML = '';
             meals.forEach(meal => {
                 const row = document.createElement('tr');
@@ -189,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboardLink = document.getElementById('dashboardLink');
     const repasLink = document.getElementById('repasLink');
     const objectifLink = document.getElementById('objectifLink');
-
     const dashboardSection = document.getElementById('dashboardSection');
     const repasSection = document.getElementById('repasSection');
     const objectifSection = document.getElementById('objectifSection');
@@ -212,7 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         objectifSection.style.display = 'block';
     });
 
-    // Default to showing the dashboard section
     dashboardSection.style.display = 'block';
     repasSection.style.display = 'none';
     objectifSection.style.display = 'none';

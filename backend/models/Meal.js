@@ -25,6 +25,10 @@ const mealSchema = new mongoose.Schema({
         type: String,
         required: true,
         default: 'user1'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 
